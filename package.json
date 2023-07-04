@@ -1,0 +1,39 @@
+{
+	"name": "geotab-react",
+	"version": "0.0.1",
+	"description": "A no-frills React application template customized for Geotab, featuring a multi-page application (MPA) setup with Webpack.",
+	"main": "index.js",
+	"scripts": {
+		"build": "webpack --mode production",
+		"start": "webpack serve --mode development --hot --port 3000"
+	},
+	"author": "Shane Graham <shanegraham@invyzn.com>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"dependencies": {
+		"prop-types": "^15.8.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.22.5",
+		"@babel/preset-env": "^7.22.5",
+		"@babel/preset-react": "^7.22.5",
+		"babel-loader": "^9.1.2",
+		"copy-webpack-plugin": "^11.0.0",
+		"css-loader": "^6.8.1",
+		"css-minimizer-webpack-plugin": "^5.0.1",
+		"file-loader": "^6.2.0",
+		"html-webpack-plugin": "^5.5.3",
+		"mini-css-extract-plugin": "^2.7.6",
+		"sass": "^1.63.6",
+		"sass-loader": "^13.3.2",
+		"terser-webpack-plugin": "^5.3.9",
+		"webpack": "^5.88.1",
+		"webpack-cli": "^5.1.4",
+		"webpack-dev-server": "^4.15.1"
+	}
+}
