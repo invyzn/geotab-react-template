@@ -6,7 +6,7 @@ import TitleFool from './TitleFool';
 
 import { render } from '../utils';
 
-function MySecond() {
+function Addin() {
 	const [name, setName] = useState();
 	const { api } = useGeotabContext();
 
@@ -38,4 +38,4 @@ function MySecond() {
 	</>);
 }
 
-render(MySecond);
+render(Addin);
