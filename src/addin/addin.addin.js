@@ -3,7 +3,6 @@ import { useGeotabContext } from '../providers/Geotab';
 
 import Header from '../components/Header';
 import TitleFool from './TitleFool';
-import c from './MySecond.scss';
 
 import { render } from '../utils';
 
@@ -26,14 +25,13 @@ function MySecond() {
 
 	return (<>
 		<Header />
-		<div className={c.body}>
+		<div>
 			{name ? <>
 				<TitleFool name={name} />
-				<p className={c.red}>You came to the second page.</p>
-				<p><a href="../index.html">Go to Index</a></p>
+				<p style={{"color": "red"}}>You came to the second page.</p>
 			</> : <>
 				<h3>MyGeotab API "Reference"</h3>
-				<p>Giving your CPU something to do...</p>
+				<p style={{"color": "red"}}>Giving your CPU something to do...</p>
 			</>}
 			
 		</div>

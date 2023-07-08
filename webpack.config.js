@@ -1,9 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -58,8 +56,8 @@ module.exports = (env, argv) => {
 	return {
 		output: {
 			path: path.resolve(__dirname, 'build'),
-			filename: isProduction ? 'assets/js/[name].[contentcontenthash].js' : 'js/[name].js',
-			chunkFilename: isProduction ? 'assets/js/[name].[contentcontenthash].js' : 'js/[name].js',
+			filename: isProduction ? 'assets/js/[name].js' : 'js/[name].js',
+			chunkFilename: isProduction ? 'assets/js/[name].js' : 'js/[name].js',
 		},
 		entry,
 		plugins: [
@@ -76,10 +74,7 @@ module.exports = (env, argv) => {
 					}
 				]
 			}),
-			...plugins,
-			new MiniCssExtractPlugin({
-				filename: (argv.mode === 'development') ? 'assets/css/[name].css' : 'assets/css/[name].[contenthash].css'
-			})
+			...plugins
 		],
 		module: {
 			rules: [
@@ -107,19 +102,10 @@ module.exports = (env, argv) => {
 					},
 				}, {
 					test: /\.(css|sass|scss)$/, // what to do with CSS files
-					exclude: /node_modules/,
 					use: [
+						'style-loader', // inject CSS to page
 						{
-							loader: MiniCssExtractPlugin.loader
-						},
-						{
-							loader: 'css-loader',
-							options: {
-								importLoaders: 1,
-								modules: {
-									localIdentName: (argv.mode === 'development') ? '[path][name]__[local]' : '[contenthash:base64]'
-								}
-							}
+							loader: 'css-loader'
 						},
 						{
 							loader: 'sass-loader',
@@ -137,7 +123,7 @@ module.exports = (env, argv) => {
 					use: [{
 						loader: 'file-loader',
 						options: {
-							name: (argv.mode === 'development') ? '[name].[ext]' : '[name].[contenthash].[ext]',
+							name: (argv.mode === 'development') ? '[name].[ext]' : '[name].[ext]',
 							outputPath: (url, resourcePath, context) => { // where the target file will be placed
 								return `assets/${url}`;
 							},
@@ -152,8 +138,7 @@ module.exports = (env, argv) => {
 		optimization:  {
 			minimize: true,
 			minimizer: [
-			  new TerserPlugin({ extractComments: false }),
-			  new CssMinimizerPlugin(),
+			  new TerserPlugin({ extractComments: false })
 			]
 		  }
 	}
