@@ -47,7 +47,8 @@ class NavFactory {
 
 class OpenMainHeader {
     constructor(props, language){
-        let title = props.labelText[language] ? props.labelText[language] : props.labelText["en"];
+        console.log(props);
+        let title = "";
         // Buttons don't change the title ref -> What is used to base the blur() functions on
         this.html = `
         <li class="mainMenuHeader">
@@ -88,7 +89,7 @@ class SubHeader {
         let title = props.labelText[language] ? props.labelText[language] : props.labelText["en"];
         this.html = `
         <li class="mainMenuOption">
-            <a class="mainMenuLink" title="The Product Guide provides an introduction to the application and its features." href="/${props.name}">
+            <a class="mainMenuLink" title="The Product Guide provides an introduction to the application and its features." href="${props.name}">
                 <span class="icon geotabIcons_${props.name}"></span>
                 <div class="ellipsis">${title}</div>
             </a>

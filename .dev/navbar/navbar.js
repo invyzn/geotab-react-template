@@ -1,6 +1,20 @@
-let body = document.getElementsByTagName('body')[0];
+require('./navbar'); // Lay out the base to the main page;
+
+let NavFactory = require('./NavFactory');
+let NavHandler = require('./NavHandler');
+let props = require('./props');
+let language = localStorage.language ? localStorage.language : 'en';
+
+let factory = new NavFactory(language);
+let handler = new NavHandler(factory, props);
+
+let init = () => {
+    handler.updateMenuItem();
+    handler.generateContent();
+};
+
 let navbar = `
-<nav id="menuId" class="westPane shadowedRight animated menuCollapsed" style="top: 40px;">
+<nav id="menuId" class="westPane shadowedRight animated" style="top: 40px;">
     <div class="mainMenuSearchBar">
         <div class="mainMenuSearch">
             <button id="menuToggle" class="mainMenuSearchButton">
@@ -26,4 +40,8 @@ let navbar = `
     </div>
 </nav>`.trim();
 
-body.innerHTML = navbar + body.innerHTML;
+module.exports = {
+    init: init,
+    handler: handler,
+    navbar: navbar
+}

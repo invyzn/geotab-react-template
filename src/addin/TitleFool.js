@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 function TitleFoo({name}) {
 	return (
-		<h1>{name}, fool!</h1>
+		<h1>Hello {name}!</h1>
 	);
 }
 

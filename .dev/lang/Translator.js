@@ -38,6 +38,7 @@ class TreeNode {
      * Scrapes child nodes from the html using the helper method for checks
      */
     getChildren(){
+        if(!this.element) return;
         let children = [];
         let childNodes = this.element.childNodes;
         if(childNodes){

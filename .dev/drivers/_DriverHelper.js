@@ -1,14 +1,14 @@
-// Helper class for groups. Handles most HTML generation and heavy lifting.
-class _GroupHelper {
+// Helper class for drivers. Handles most HTML generation and heavy lifting.
+class _driverHelper {
     
     /**
-     * Converts the group array into a dictionary where the key is the id of group.
-     * Prevents nested iteration to look for and sort through groups.
+     * Converts the driver array into a dictionary where the key is the id of driver.
+     * Prevents nested iteration to look for and sort through drivers.
      * 
-     * @param {array} groupArray Raw group array returned from the api.
+     * @param {array} driverArray Raw driver array returned from the api.
      */
-    static convertGroupsListToDictionary(groupArray){
-        let dict = groupArray.reduce((output, current) => {
+    static convertdriversListToDictionary(driverArray){
+        let dict = driverArray.reduce((output, current) => {
             let id = current.id;
             
             // Clean the data.
@@ -17,7 +17,7 @@ class _GroupHelper {
                 color: current.color,
                 comments: current.comments,
                 reference: current.reference,
-                name: current.name || 'GroupCompanyId',
+                name: current.name || 'driverCompanyId',
                 selected: false
             };
 
@@ -27,14 +27,14 @@ class _GroupHelper {
         return dict;
     }
 
-    static generateActiveHeaderText(state, stateLength, groupDictionary){
+    static generateActiveHeaderText(state, stateLength, driverDictionary){
         let text = ``;
 
         for(let i=0; i<stateLength; i++){
-            let id = state._activeGroups[i].id;
-            let name = groupDictionary[id].name;
+            let id = state._activedrivers[i].id;
+            let name = driverDictionary[id].name;
 
-            if(i === state._activeGroups.length-1){
+            if(i === state._activedrivers.length-1){
                 text += ' ' + name;
             } else {
                 text += ' ' + name + ` OR`;
@@ -45,30 +45,30 @@ class _GroupHelper {
     }
 
     static generateFolderEventListener(previous, current){
-        let listener = `groupsFilter.changeFocus('${previous}', '${current}');`;
+        let listener = `driversFilter.changeFocus('${previous}', '${current}');`;
         return listener;
     }
 
     static generateFilterEventListener(filter){
-        let listener = `groupsFilter.toggleGroupFilter('${filter}');`;
+        let listener = `driversFilter.toggledriverFilter('${filter}');`;
         return listener;
     }
 
     static generatePreviousFolderEventListener(){
-        let listener = `groupsFilter.goToPreviousFolder()`;
+        let listener = `driversFilter.goToPreviousFolder()`;
         return listener;
     }
 
     static generateFilterListElement(childId, childNode){
         let checked = childNode.selected ? 'checked' : '';
-        return `<li id="group-item-${childId}" onchange="${this.generateFilterEventListener(childId)}">
-                    <input id="group-use-${childId}" type="checkbox" class="geotabSwitchButton navButton" ${checked}>
-                    <label for="group-use-${childId}" class="geotabButton" style="width: 100%;">${childNode.name}</label>
+        return `<li id="driver-item-${childId}" onchange="${this.generateFilterEventListener(childId)}">
+                    <input id="driver-use-${childId}" type="checkbox" class="geotabSwitchButton navButton" ${checked}>
+                    <label for="driver-use-${childId}" class="geotabButton" style="width: 100%;">${childNode.name}</label>
                 </li>`;
     }
 
     static generateFolderListElement(id, root, node){
-        return `<li id="group-folder-${node.id}" class="geotabButton navButton" onclick="${this.generateFolderEventListener(root, id)}">
+        return `<li id="driver-folder-${node.id}" class="geotabButton navButton" onclick="${this.generateFolderEventListener(root, id)}">
                     <span class="icon geotabIcons_folder"></span>
                     ${node.name}
                </li>`;
@@ -77,20 +77,20 @@ class _GroupHelper {
     /**
      * Iterates over entire dictionary object for search terms and returns html of matching folder/filter names.
      * 
-     * @param {object} groupsDictionary dictionary used in search.
+     * @param {object} driversDictionary dictionary used in search.
      * @param {RegExp} regex Regex defining search term.
      */
-    static generateSearchHtml(groupsDictionary, regex = /^.*$/g){
-        let html = `<ul id="group-dropdown-ul" class="geotabPrimaryFill select-buttons">`;
+    static generateSearchHtml(driversDictionary, regex = /^.*$/g){
+        let html = `<ul id="driver-dropdown-ul" class="geotabPrimaryFill select-buttons">`;
         let resultCount = 0;
         
-        // When we iterate over all the keys in the groupsDictionary, we get all the groups instead of top level children
-        // of user's Root group.
-        Object.keys(groupsDictionary).forEach(key => {
-            let node = groupsDictionary[key];
+        // When we iterate over all the keys in the driversDictionary, we get all the drivers instead of top level children
+        // of user's Root driver.
+        Object.keys(driversDictionary).forEach(key => {
+            let node = driversDictionary[key];
             if(regex.test(node.name.toLowerCase())){
                 if(node.children.length > 0){
-                    html += this.generateFolderListElement(key, 'GroupCompanyId', node);
+                    html += this.generateFolderListElement(key, 'driverCompanyId', node);
                     resultCount++;
                 } else {
                     html += this.generateFilterListElement(key, node);
@@ -108,36 +108,36 @@ class _GroupHelper {
     }
 
     /**
-     * Used to generate html for a folder. If the folder is not the top level folder (GroupCompanyId),
+     * Used to generate html for a folder. If the folder is not the top level folder (driverCompanyId),
      * navigational items (Use this Level and Go Up one Level) will be generated.
      * 
-     * @param {object} groupsDictionary the dictionary used to generate the folder.
+     * @param {object} driversDictionary the dictionary used to generate the folder.
      * @param {string} root the dictionary key we start the folder on.
-     * @param {string} baseNode the user's highest group permission. 
+     * @param {string} baseNode the user's highest driver permission. 
      */
-    static generateNodeHtml(groupsDictionary, root, baseNode = root){
-        let html = `<ul id="group-dropdown-ul" class="geotabPrimaryFill select-buttons">`
-        let name = groupsDictionary[root].name;
-        let checked = groupsDictionary[root].selected ? 'checked' : '';
+    static generateNodeHtml(driversDictionary, root, baseNode = root){
+        let html = `<ul id="driver-dropdown-ul" class="geotabPrimaryFill select-buttons">`
+        let name = driversDictionary[root].name;
+        let checked = driversDictionary[root].selected ? 'checked' : '';
 
         if(root !== baseNode){
             html += `<li onchange="${this.generateFilterEventListener(root)}">
-                        <input id="group-go-to-${root}" type="checkbox" class="geotabSwitchButton navButton" ${checked}>
-                        <label for="group-go-to-${root}" class="geotabButton" style="width:100%;">
+                        <input id="driver-go-to-${root}" type="checkbox" class="geotabSwitchButton navButton" ${checked}>
+                        <label for="driver-go-to-${root}" class="geotabButton" style="width:100%;">
                             <span class='icon geotabIcons_status'></span>
                             Everything in ${name}
                         </label>
                      </li>`;
             html += `<li onchange="${this.generatePreviousFolderEventListener()}">
-                        <input id="group-use-${root}" type="checkbox" class="geotabSwitchButton navButton">
-                        <label for="group-use-${root}" class="geotabButton" style="width:100%;">
+                        <input id="driver-use-${root}" type="checkbox" class="geotabSwitchButton navButton">
+                        <label for="driver-use-${root}" class="geotabButton" style="width:100%;">
                         <span class='icon geotabIcons_level_up'></span>
                             Up one level
                         </label>
                      </li>`;
         }
         
-        html += this.generateFolderHtml(groupsDictionary, root);
+        html += this.generateFolderHtml(driversDictionary, root);
         html += `</ul>`;
 
         return html;
@@ -146,15 +146,15 @@ class _GroupHelper {
     /**
      * Looks at the children of the provided root object and generates html for the child objects.
      * 
-     * @param {object} groupsDictionary 
+     * @param {object} driversDictionary 
      * @param {string} root Base level to use for html generation
      */
-    static generateFolderHtml(groupsDictionary, root){
+    static generateFolderHtml(driversDictionary, root){
         let html = ``;
 
-        groupsDictionary[root].children.forEach( child => {
+        driversDictionary[root].children.forEach( child => {
             let childId = child.id
-            let childNode = groupsDictionary[childId];
+            let childNode = driversDictionary[childId];
 
             if(childNode.children.length > 0){
                 html += this.generateFolderListElement(childId, root, childNode);
@@ -167,4 +167,4 @@ class _GroupHelper {
     }
 }
 
-module.exports = _GroupHelper;
+module.exports = _driverHelper;

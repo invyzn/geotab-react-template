@@ -70,7 +70,7 @@ class Groups {
         let html = _GroupHelper.generateNodeHtml(this.groupsDictionary, this.baseNode);
         this.root.innerHTML = html;
 
-        geotab.addin.storageApiSample.focus(this.api, this.state);
+        geotab.addin.request.focus(this.api, this.state);
     }
 
     /**
@@ -98,7 +98,7 @@ class Groups {
 
         this.writeActiveGroups();
 
-        geotab.addin.storageApiSample.focus(this.api, this.state);
+        geotab.addin.request.focus(this.api, this.state);
     }
 
     /**

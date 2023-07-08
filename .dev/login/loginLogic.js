@@ -67,6 +67,7 @@ class GeotabLogin {
     initializeAddin(isDriveAddin) {
         Object.keys(global.geotab.addin).forEach(function (name) {
             let addin = global.geotab.addin[name];
+
             if (addin.isInitialize) {
                 addin.focus(global.api, global.state);
             } else {

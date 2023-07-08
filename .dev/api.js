@@ -349,42 +349,48 @@ var GeotabApi = function (getCredentialsCallback, newOptions, customCredentialSt
          *  @return {Object} An object with operations for the call. Supported operation(s): abort()
          */
         call = function (method, params, callbackSuccess, callbackError) {
-            var
-                needsLoginAndCall = function () {
-                    pendingCalls.push([method, params, callbackSuccess, callbackError]);
-                    var storedCredentials = credentialsStore.get();
-                    if (storedCredentials && options.rememberMe) {
-                        credentials = storedCredentials.credentials;
-                        server = storedCredentials.server;
-                        // Try again
-                        pendingCalls.forEach(function (p) {
-                            call.apply(this, p);
-                        });
-                        pendingCalls = [];
-                    } else {
-                        populateAuthenticationCallback();
-                    }
-                };
-            if (!credentials) {
-                needsLoginAndCall();
-                return {
-                    abort: function () { }
-                };
-            }
-            params.credentials = credentials;
-            return callBase(method, params, callbackSuccess, function (errorString, errorObject) {
-                var errors = errorObject.errors;
-                if (errors && errors[0] && errors[0].name === 'InvalidUserException' && method !== 'Authenticate') {
-                    // We do have a credentials token, but it's no longer valid
-                    // Let's clear it
-                    credentialsStore.clear();
+            if(!callbackSuccess && !callbackError) {
+                return new Promise((resolve, reject) => {
+                    call(method, params, resolve, reject);
+                });
+            } else {
+                var
+                    needsLoginAndCall = function () {
+                        pendingCalls.push([method, params, callbackSuccess, callbackError]);
+                        var storedCredentials = credentialsStore.get();
+                        if (storedCredentials && options.rememberMe) {
+                            credentials = storedCredentials.credentials;
+                            server = storedCredentials.server;
+                            // Try again
+                            pendingCalls.forEach(function (p) {
+                                call.apply(this, p);
+                            });
+                            pendingCalls = [];
+                        } else {
+                            populateAuthenticationCallback();
+                        }
+                    };
+                if (!credentials) {
                     needsLoginAndCall();
-                } else {
-                    if (callbackError) {
-                        callbackError(errorString, errorObject);
-                    }
+                    return {
+                        abort: function () { }
+                    };
                 }
-            });
+                params.credentials = credentials;
+                return callBase(method, params, callbackSuccess, function (errorString, errorObject) {
+                    var errors = errorObject.errors;
+                    if (errors && errors[0] && errors[0].name === 'InvalidUserException' && method !== 'Authenticate') {
+                        // We do have a credentials token, but it's no longer valid
+                        // Let's clear it
+                        credentialsStore.clear();
+                        needsLoginAndCall();
+                    } else {
+                        if (callbackError) {
+                            callbackError(errorString, errorObject);
+                        }
+                    }
+                });
+            }
         },
         /**
          *  Calls multiple Geotab methods at the same time. Returns an array of results corresponding to the order the calls are passed in
@@ -401,16 +407,22 @@ var GeotabApi = function (getCredentialsCallback, newOptions, customCredentialSt
          *  @return {Object} An object with operations for the call. Supported operation(s): abort()
          */
         multiCall = function (calls, callbackSuccess, callbackError) {
-            var formattedCalls = calls.map(function (call) {
-                var params = call[1];
-                return {
-                    method: call[0],
-                    params: params
-                };
-            });
-            return call('ExecuteMultiCall', {
-                calls: formattedCalls
-            }, callbackSuccess, callbackError);
+            if(!callbackSuccess && !callbackError) {
+                return new Promise((resolve, reject) => {
+                    multiCall(calls, resolve, reject);
+                })
+            } else {
+                var formattedCalls = calls.map(function (call) {
+                    var params = call[1];
+                    return {
+                        method: call[0],
+                        params: params
+                    };
+                });
+                return call('ExecuteMultiCall', {
+                    calls: formattedCalls
+                }, callbackSuccess, callbackError);
+            }
         },
         /**
          *  Retrieves a session. Useful for single sign-on or other cases where you require the credentials

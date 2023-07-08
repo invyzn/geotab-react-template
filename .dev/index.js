@@ -13,37 +13,27 @@
  * **********************************************
  */
 
-
 // Global object is used to simulate the api, state, and geotab objects
+import "./styles/form.scss";
+import "./styles/mapAddinStyles.css";
+
+global.events = require('./events');
 global.api
 global.state = require('./state');
 global.geotab = {
     addin: {}, 
     customButtons: {}, 
-    isDriveAddin: false,
-    isLocalHost: true
+    isDriveAddin: false
 }
 // Importing the app rules -> Where addin will be described
 
+require('./addin');
+
 // Importing dev-specific packages
-import './rison';
+//import './rison';
 import './login/loginTemplate.js';
 import GeotabLogin from './login/loginLogic';
 import GeotabApi from './api';
-
-// Building navbar
-// Exposing handler to let the translate function have access to it
-//import './navbar/NavBuilder';
-import './styles/styleGuide.css';
-
-
-/* Group Filter Module */
-import GroupListeners from './groups/GroupListeners.js';
-let groupListener = new GroupListeners(global.api, global.state, 'group-dropdown');
-groupListener.assignEventListeners();
-
-// Handling the blur toggle
-require('./ToggleHandler');
 
 let initilized = false;
 
@@ -54,16 +44,7 @@ initilized = setInterval(() => {
     }
 }, 50)
 
-// Setting up mock display panel
-// Setting up mock display panel
-let mainPanel = document.querySelector('#geotabApp');
-mainPanel.id = 'checkmateContent';
-mainPanel.className = 'centerPane';
-mainPanel.style.top = '40px';
-mainPanel.style.left = '50px';
 
-// Creating new div with the ID geotabApp
-let newDiv = document.createElement('div');
-newDiv.id = 'geotabApp';
-mainPanel.appendChild(newDiv);
+// Handling the blur toggle
+// require('./ToggleHandler');
 // Setup complete

@@ -102,6 +102,11 @@ class TranslationHelper {
     }
 
     updateJSON(language){
+        try {
+            this.json = require(`../../src/translations/${language}.json`);
+        } catch (e) {
+            throw new Error(`${language}.json is not defined`);
+        }
     }
 
 }

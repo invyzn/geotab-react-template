@@ -92,7 +92,6 @@ class NavHandler {
         // Referencing the new navbar
         let navigationBar         = document.getElementById('menuId');
         let toggleButton          = document.getElementById('menuToggle');
-        let centerPane            = document.getElementById('app');
         let chevronIcon           = toggleButton.children.item(0);
         let menuHeaders           = document.getElementsByClassName('mainMenuHeader');
         let floatingMenu          = document.getElementById('hiddenMenu');
@@ -102,11 +101,9 @@ class NavHandler {
         toggleButton.addEventListener('click', ()=>{
             if(!navigationBarExtended){
                 navigationBar.className = navigationBar.className.replace('menuCollapsed', '');
-                centerPane.style.left = '250px';
                 chevronIcon.style.transform = 'rotate(0deg)';
             } else {
                 navigationBar.className += ' menuCollapsed';
-                centerPane.style.left = '50px';
                 chevronIcon.style.transform = 'rotate(180deg)';
             }
              // Closing the floating menu
@@ -170,46 +167,6 @@ class NavHandler {
 
     updateMenuItem(){
         this.createNavBar();
-    }
-
-    /**
-     * Toggles the development addin
-     * allows user to see any processes that take place when the addin is blurred/focused
-     */
-    enableDisplayToggle(){
-        let displayToggle = document.getElementById('toggleBtn');
-        displayToggle.addEventListener('click', () => {
-            if(this.focus){
-                displayToggle.innerHTML = 'Focus add-in';
-                global.geotab.addin.storageApiSample.blur();
-            } else {
-                displayToggle.innerHTML = 'Blur add-in';
-                global.geotab.addin.storageApiSample.focus(global.api, global.state);
-            }
-            this.focus = !this.focus;
-        });
-    }
-    
-    /**
-     * Hash listener -> Due to the call stack order, it's necessary to repeatedly check for this
-     * during page operation. This is what we base the blur() effect on. Without this, when we 
-     * try to update the hash, we get the previous one, causing the update to be one behind the 
-     * active hash.
-     * 
-     * onHashChange does not appear to be supported as an event in this browser
-     */
-    listenToHash(){
-        this.storedHash = window.location.hash;
-        setInterval(()=>{
-            if(window.location.hash !== this.storedHash){
-                this.storedHash = window.location.hash;
-                if(this.storedHash !== '#' + 'storageApiSample'){
-                    geotab.addin.storageApiSample.blur();
-                } else {
-                    geotab.addin.storageApiSample.focus(global.api, global.state);
-                }
-            }
-        }, 100);
     }
 
 } 

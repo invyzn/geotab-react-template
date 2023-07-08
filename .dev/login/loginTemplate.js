@@ -1,6 +1,7 @@
 let body = document.getElementsByTagName('body')[0];
 import icon from '../images/Font_Awesome_5_solid_chevron-left.svg';
 import xIcon from '../images/close-round.svg';
+
 let loginExample = `
     <link rel="stylesheet" href="https://my.geotab.com/geotab/checkmate/main.css" />
     <link rel="stylesheet" href="https://my.geotab.com/invyzn_corp/productGuide/en/style/main.css" />
